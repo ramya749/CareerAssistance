@@ -9,6 +9,8 @@ import { RiH3 } from 'react-icons/ri';
 
 function Resume() {
     let user = JSON.parse(localStorage.getItem("users"))
+    let Token = JSON.parse(localStorage.getItem("token")).token
+
 
     const navigate = useNavigate()
     const [skillValue, setSkillValue] = useState([])
@@ -158,16 +160,28 @@ function Resume() {
         const formData = new FormData();
         formData.append("user_id", user.id);
         formData.append("data", JSON.stringify(inputValue));
+        const headers = { 'Authorization': `Bearer ${Token}` };
 
-        axios.post('https://ramyabharathi.pythonanywhere.com/resume', formData).then((res) => {
+        axios.post('https://ramyabharathi.pythonanywhere.com/resume', formData,{headers}).then((res) => {
             console.log(res)
-        })
-        alert("submit")
-        navigate("/quesquiz")
+            alert("submit")
+            navigate("/quesquiz")
+        }).catch((e) => {
+            if (e.response.status === 422 || e.response.status === 401) {
+                alert("Token error")
+                navigate("/login")
+            }
+            console.log(e)
+
+
+        });
+       
     }
 
     const getResumeApi = () => {
-        axios.get(`https://ramyabharathi.pythonanywhere.com/get_resumedetails/${user.id}`).then((res) => {
+        const headers = { 'Authorization': `Bearer ${Token}` };
+
+        axios.get(`https://ramyabharathi.pythonanywhere.com/get_resumedetails/${user.id}`,{headers}).then((res) => {
             console.log(res.data.data.data)
             // let getData = JSON.parse(res.data.data.data)
             // setInputValue({...inputValue,...getData})
@@ -178,7 +192,9 @@ function Resume() {
     };
 
     const getUserDetails = () => {
-        axios.get(`https://ramyabharathi.pythonanywhere.com/get_userdetails/${user.id}`)
+        const headers = { 'Authorization': `Bearer ${Token}` };
+
+        axios.get(`https://ramyabharathi.pythonanywhere.com/get_userdetails/${user.id}`,{headers})
         .then((res) => {
             console.log(res)
             const getDatas = res.data.data.data
@@ -357,7 +373,7 @@ function Resume() {
                 <Col sm="6">
                     <h3 style={{
                         marginTop: "20px",
-                        marginBottom: "10px", marginLeft: "80px", width: "400px", marginLeft: "100px", color: "white"
+                        marginBottom: "10px", width: "400px", marginLeft: "100px", color: "white"
                     }}><i>Education</i></h3>
                     <Form.Label style={{ width: "400px", marginLeft: "100px", color: "white" }}><i>CourseName</i></Form.Label>
                     <Form.Control style={{ width: "400px", marginLeft: "100px" }} type="text" value={courseValue.coursename} placeholder="Enter CourseName"

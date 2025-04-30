@@ -24,7 +24,6 @@ function Login() {
         formData.append("email", loginDetails.email);
         formData.append("password", loginDetails.password);
 
-        // axios.post('https://agaram.academy/api/b4/action.php?request=ai_carrier_user_login', formData)
                 axios.post('https://ramyabharathi.pythonanywhere.com/login', formData)
 
         .then((res) => {
@@ -38,7 +37,9 @@ function Login() {
                     alert("Login Successfull")
                     console.log(res.data.data)
                     dispatch(setLoginUsers(res.data.data))     
-                    localStorage.setItem("users", JSON.stringify(res.data.data));        
+                    localStorage.setItem("users", JSON.stringify(res.data.data)); 
+                    localStorage.setItem("token", JSON.stringify(res.data.data));        
+       
                     navigate('/details')
                 }
                 else {

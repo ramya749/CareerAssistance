@@ -24,9 +24,14 @@ function CareerAi(){
   const [summary,setSummary] = useState("")
 
   let val = JSON.parse(localStorage.getItem("users"))
+  let Token = JSON.parse(localStorage.getItem("token")).token
+
+  
 
   const getUpdateGoalApi = () => {
-    axios.get(`https://ramyabharathi.pythonanywhere.com/get_userdetails/${val.id}`)
+                    const headers = { 'Authorization': `Bearer ${Token}` };
+    
+    axios.get(`https://ramyabharathi.pythonanywhere.com/get_userdetails/${val.id}`,{headers})
         .then((res) => {
             if (res.data.data.data) {
                 const getData = JSON.parse(res.data.data.data);
@@ -34,7 +39,7 @@ function CareerAi(){
             }
         })
 
-    axios.get(`https://ramyabharathi.pythonanywhere.com/get_goal/${val.id}`)
+    axios.get(`https://ramyabharathi.pythonanywhere.com/get_goal/${val.id}`,{headers})
         .then((res) => {
             if (res.data.data.data) {
                 const getDatas = JSON.parse(res.data.data.data);

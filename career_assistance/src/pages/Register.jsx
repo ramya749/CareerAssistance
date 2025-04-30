@@ -1,4 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button,Container,Form } from 'react-bootstrap';
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -29,7 +29,6 @@ function Register(){
                     formData.append("name",name);
                     formData.append("email",email);
                     formData.append("password",password);
-                        // axios.post("https://agaram.academy/api/b4/action.php?request=ai_carrier_user_register",formData)
                         axios.post("https://ramyabharathi.pythonanywhere.com/register",formData)
 
                         .then((res)=>{

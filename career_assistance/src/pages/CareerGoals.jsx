@@ -10,6 +10,8 @@ import Header from './Header';
 
 function CareerGoals() {
     let user = JSON.parse(localStorage.getItem("users"));
+    let Token = JSON.parse(localStorage.getItem("token")).token
+
     const [inputValue, setInputValue] = useState("")
     const [userDetails, setuserDetails] = useState({})
     let getVal = { ...userDetails, details: inputValue};    
@@ -89,17 +91,29 @@ function CareerGoals() {
             const formData = new FormData();
             formData.append("user_id", user.id);
             formData.append("data", JSON.stringify(goalsDetails));
+            const headers = { 'Authorization': `Bearer ${Token}` };
 
-            axios.post('https://ramyabharathi.pythonanywhere.com/goal', formData).then((res) => {
+            axios.post('https://ramyabharathi.pythonanywhere.com/goal', formData,{headers}).then((res) => {
                 console.log(res)
-            })
-            alert("submitted successfully");
-            navigate("/show");
+                alert("submitted successfully");
+                navigate("/show");
+            }).catch((e) => {
+                if (e.response.status === 422 || e.response.status === 401) {
+                    alert("Token error")
+                    navigate("/login")
+                }
+                console.log(e)
+
+
+            });
+           
         }
     }
 
     const getgoalDetailsApi = () => {
-        axios.get(`https://ramyabharathi.pythonanywhere.com/get_goal/${user.id}`)
+        const headers = { 'Authorization': `Bearer ${Token}` };
+
+        axios.get(`https://ramyabharathi.pythonanywhere.com/get_goal/${user.id}`,{headers})
             .then((res) => {
                 let getData = res.data.data.data
                 setGoalDetails(JSON.parse(getData))
@@ -107,8 +121,10 @@ function CareerGoals() {
             })
     }
 
-    const getUpdateGoalApi = () => {
-        axios.get(`https://ramyabharathi.pythonanywhere.com/get_userdetails/${user.id}`)
+    const getUserdetailsApi = () => {
+        const headers = { 'Authorization': `Bearer ${Token}` };
+
+        axios.get(`https://ramyabharathi.pythonanywhere.com/get_userdetails/${user.id}`,{headers})
             .then((res) => {
                 if (res.data.data.data) {
                     const getData = JSON.parse(res.data.data.data);
@@ -117,7 +133,7 @@ function CareerGoals() {
             })
         }
         useEffect(() => {
-            getUpdateGoalApi()
+            getUserdetailsApi()
         }, [])
     
 

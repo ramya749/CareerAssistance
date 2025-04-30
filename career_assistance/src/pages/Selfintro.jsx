@@ -9,6 +9,8 @@ import axios from 'axios';
 function Selfintro() {
 
   let val = JSON.parse(localStorage.getItem("users"))
+  let Token = JSON.parse(localStorage.getItem("token")).token
+
   const cx = "84c171dacf1aa43c1"
   const apiKey = "AIzaSyC8kh_wDAmTboxQf3lvjBSChxhiNfjbPdU"
 
@@ -23,8 +25,9 @@ function Selfintro() {
  
 
   const getApi = () => {
+    const headers = { 'Authorization': `Bearer ${Token}` };
 
-    axios.get(`https://ramyabharathi.pythonanywhere.com/get_userdetails/${val.id}`).then((res) => {
+    axios.get(`https://ramyabharathi.pythonanywhere.com/get_userdetails/${val.id}`,{headers}).then((res) => {
       let getData = res.data.data.data
       console.log(getData)
       setuserInputValue(JSON.parse(getData))
@@ -57,13 +60,8 @@ function Selfintro() {
         avoid text outside HTML tags return only the HTML content`;
 
 
-
-
-
-
     const result = await model.generateContent(prompt);
     console.log("Summary Response:", result.response.text());
-
 
     const responseText = result.response.text();
 

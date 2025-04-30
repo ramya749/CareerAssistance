@@ -9,6 +9,8 @@ import Header from './Header';
 function ShowUser() {
 
     let val = JSON.parse(localStorage.getItem("users"))
+    let Token = JSON.parse(localStorage.getItem("token")).token
+
 
     const navigate = useNavigate()
     const [inputValue, setInputValue] = useState("")
@@ -19,7 +21,9 @@ function ShowUser() {
     localStorage.setItem("userdetails", JSON.stringify(getVal));
 
     const getUpdateGoalApi = () => {
-        axios.get(`https://ramyabharathi.pythonanywhere.com/get_userdetails/${val.id}`)
+                const headers = { 'Authorization': `Bearer ${Token}` };
+        
+        axios.get(`https://ramyabharathi.pythonanywhere.com/get_userdetails/${val.id}`,{headers})
             .then((res) => {
                 if (res.data.data.data) {
                     const getData = JSON.parse(res.data.data.data);
@@ -27,7 +31,7 @@ function ShowUser() {
                 }
             })
 
-        axios.get(`https://ramyabharathi.pythonanywhere.com/get_goal/${val.id}`)
+        axios.get(`https://ramyabharathi.pythonanywhere.com/get_goal/${val.id}`,{headers})
             .then((res) => {
                 if (res.data.data.data) {
                     const getDatas = JSON.parse(res.data.data.data);
